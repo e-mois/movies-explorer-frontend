@@ -1,0 +1,38 @@
+.toggle-round + label {
+  width: 36px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 20px;
+}
+
+.toggle-round + label:before,
+.toggle-round + label:after {
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  content: "";
+}
+
+.toggle-round + label:before {
+  right: 1px;
+  height: 20px;
+  background-color: #2BE080;
+  border-radius: 20px;
+  transition: background 0.4s;
+}
+
+.toggle-round + label:after {
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background-color: #fff;
+  border-radius: 100%;
+  transition: margin 0.4s;
+}
+
+.toggle-round:checked + label:after {
+  margin-left: 14px;
+}

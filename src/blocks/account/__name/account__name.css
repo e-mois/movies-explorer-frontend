@@ -1,0 +1,11 @@
+.account__name {
+  font-size: 13px;
+  font-weight: 500;
+  margin-right: 22px;
+}
+
+@media screen and (max-width: 768px) {
+  .account__name {
+    font-size: 14px;
+  }
+}

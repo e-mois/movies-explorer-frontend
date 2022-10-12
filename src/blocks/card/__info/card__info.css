@@ -1,0 +1,10 @@
+.card__info {
+  background-color: #FDFDFD;
+  border-radius: 0 0 10px 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  margin-top: -5px;
+}

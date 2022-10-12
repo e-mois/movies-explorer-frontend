@@ -1,0 +1,11 @@
+.card__button {
+  width: 16px;
+  height: 16px;
+  border-radius: 100%;
+  background-color: #F9F9F9;
+  border: 2px solid white;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1)
+}
