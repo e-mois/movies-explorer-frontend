@@ -6,7 +6,7 @@ const loggedIn = true;
 
 function Profile() {
   return (
-    <section className="profile">
+    <div className="profile">
       <Header
         loggedIn={loggedIn}
       >
@@ -16,26 +16,28 @@ function Profile() {
           <img className="account__avatar" src={avatar} alt="Аватар" />
         </div>
       </Header>
-      <div className="profile__content">
-        <div className="profile__main">
-          <h2 className="profile__title">Привет, Евгений!</h2>
-          <div className="profile__info">
-            <div className="profile__row">
-              <p className="profile__key">Имя</p>
-              <p className="profile__value">Евгений</p>
-            </div>
-            <div className="profile__row">
-              <p className="profile__key">E-Mail</p>
-              <p className="profile__value">email@email.ru</p>
+      <main className="main">
+        <div className="profile__content">
+          <div className="profile__main">
+            <h2 className="profile__title">Привет, Евгений!</h2>
+            <div className="profile__info">
+              <div className="profile__row">
+                <p className="profile__key">Имя</p>
+                <p className="profile__value">Евгений</p>
+              </div>
+              <div className="profile__row">
+                <p className="profile__key">E-Mail</p>
+                <p className="profile__value">email@email.ru</p>
+              </div>
             </div>
           </div>
+          <div className="profile__buttons">
+            <button className="profile__button" type="button">Редактировать</button>
+            <button className="profile__button profile__button_type_red" type="button">Выйти из аккаунта</button>
+          </div>
         </div>
-        <div className="profile__buttons">
-          <button className="profile__button">Редактировать</button>
-          <button className="profile__button profile__button_type_red">Выйти из аккаунта</button>
-        </div>
-      </div>
-    </section>
+      </main>
+    </div>
   )
 }
 

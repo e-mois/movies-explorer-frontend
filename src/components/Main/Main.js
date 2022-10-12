@@ -19,10 +19,12 @@ function Main() {
           <Link className='header__login' to='/signin'>Войти</Link>
         </div>
       </Header>
-      <Promo />
-      <AboutProject />
-      <Techs />
-      <AboutMe />
+      <main className="main">
+        <Promo />
+        <AboutProject />
+        <Techs />
+        <AboutMe />
+      </main>
       <Footer />
     </div>
   );

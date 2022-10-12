@@ -12,3 +12,7 @@
   right: 0;
   cursor: pointer;
 }
+
+.search-form__button:hover {
+  background-color: #5C5C5C;
+}

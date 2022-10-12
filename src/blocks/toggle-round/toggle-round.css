@@ -17,7 +17,7 @@
 .toggle-round + label:before {
   right: 1px;
   height: 20px;
-  background-color: #2BE080;
+  background-color: #EBEBEB;
   border-radius: 20px;
   transition: background 0.4s;
 }
@@ -28,7 +28,7 @@
   position: absolute;
   top: 6px;
   left: 6px;
-  background-color: #fff;
+  background-color: #F5F5F5;
   border-radius: 100%;
   transition: margin 0.4s;
 }

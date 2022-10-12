@@ -17,21 +17,25 @@ function SavedMovies() {
         <div className="header__nav">
           <div className="header__nav-container">
             <Navigation />
-            <button className="header__close"></button>
+            <button className="header__close" type="button"></button>
             <div className="account">
               <p className="account__name">Аккаунт</p>
               <img className="account__avatar" src={avatar} alt="Аватар" />
             </div>
           </div>
         </div>
-        <div className="header__burger">
-          <span className="header__span"></span>
-          <span className="header__span"></span>
-          <span className="header__span"></span>
-        </div>
+        <a className="header__burger-link" href="#">
+          <div className="header__burger">
+            <span className="header__span"></span>
+            <span className="header__span"></span>
+            <span className="header__span"></span>
+          </div>
+        </a>
       </Header>
-      <SearchForm />
-      <MoviesCardList saved={savedFilm} />
+      <main className="main">
+        <SearchForm />
+        <MoviesCardList saved={savedFilm} />
+      </main>
       <Footer />
     </div>
     
