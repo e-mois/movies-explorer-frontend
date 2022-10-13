@@ -1,7 +1,0 @@
-.toggle-round_active + label:before {
-  background-color: #2BE080;
-}
-
-.toggle-round_active + label:after {
-  background-color: #FFF;
-}

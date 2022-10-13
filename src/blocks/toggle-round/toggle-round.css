@@ -35,4 +35,9 @@
 
 .toggle-round:checked + label:after {
   margin-left: 14px;
+  background-color: #FFF;
+}
+
+.toggle-round:checked + label:before {
+  background-color: #2BE080;
 }
