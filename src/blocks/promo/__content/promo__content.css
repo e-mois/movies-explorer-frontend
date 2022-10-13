@@ -1,0 +1,37 @@
+.promo__content {
+  width: 90%;
+  max-width: 1140px;
+  margin: 0 auto;
+  background-image: url(../../../images/promo__bg.png);
+  background-repeat: no-repeat;
+  background-size: 310px 304px;
+  background-position: top 75px right;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+
+@media screen and (max-width: 768px) {
+  .promo__content {
+    width: 90%;
+    max-width: 668px;
+    background-size: 310px 304px;
+    background-position: top 140px center;
+    justify-content: end;
+    align-items: center;
+    padding-bottom: 79px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .promo__content {
+    width: 90%;
+    max-width: 300px;
+    background-size: 210px 206px;
+    background-position: top 70px center;
+    padding-bottom: 30px;
+  }
+}

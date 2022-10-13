@@ -1,0 +1,12 @@
+.promo__button {
+  width: 129px;
+  height: 36px;
+  background-color: #5C5C5C;
+  border: 1px solid white;
+  border-radius: 3px;
+  font-size: 12px;
+  line-height: 1.33;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+}
