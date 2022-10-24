@@ -5,18 +5,7 @@ import isEmail from "validator/lib/isEmail";
 
 function Login(props) {
 
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-
   const { register, handleSubmit, formState: { errors } } = useForm();
-
-  // function handleChangeEmail(event) {
-  //   setEmail(event.target.value)
-  // }
-
-  // function handleChangePass(event) {
-  //   setPassword(event.target.value)
-  // }
 
   function onSubmit(data) {
     props.onLoginUser({

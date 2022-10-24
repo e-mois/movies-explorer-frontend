@@ -11,18 +11,7 @@ function Profile(props) {
 
   const currentUser = useContext(CurrentUserContext);
 
-  // const [name, setName] = useState('');
-  // const [email, setEmail] = useState('');
-
   const { register, handleSubmit, formState: { errors } } = useForm();
-
-  // function handleChangeName(event) {
-  //   setName(event.target.value)
-  // }
-
-  // function handleChangeEmail(event) {
-  //   setEmail(event.target.value)
-  // }
 
   function onSubmit(data) {
     props.onChangeUser({
