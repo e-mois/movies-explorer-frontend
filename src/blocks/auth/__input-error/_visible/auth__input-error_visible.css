@@ -1,0 +1,6 @@
+.auth__input-error_visible {
+  display: inline-block;
+  width: 100%;
+  top: 29px;
+  text-align: right;
+}

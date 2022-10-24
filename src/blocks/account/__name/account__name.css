@@ -2,6 +2,12 @@
   font-size: 13px;
   font-weight: 500;
   margin-right: 22px;
+  text-decoration: none;
+  color: black;
+}
+
+.account__name:hover {
+  text-decoration: underline;
 }
 
 @media screen and (max-width: 768px) {

@@ -6,3 +6,5 @@
 @import url(../../blocks/card/__button/_theme/card__button_theme.css);
 @import url(../../blocks/card/__button/_type/card__button_type_close.css);
 @import url(../../blocks/card/__image/card__image.css);
+@import url(../../blocks/card/__info-container/card__info-container.css);
+@import url(../../blocks/card/__trailer/card__trailer.css);

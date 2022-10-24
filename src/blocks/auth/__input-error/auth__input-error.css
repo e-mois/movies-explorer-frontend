@@ -1,5 +1,5 @@
 .auth__input-error {
-  display: inline-block;
+  display: none;
   position: absolute;
   width: 358px;
   color: red;
