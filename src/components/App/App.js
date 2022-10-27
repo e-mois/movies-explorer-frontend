@@ -12,12 +12,15 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import moviesApi from '../../utils/MoviesApi';
 import api from '../../utils/Api';
+import { get } from 'react-hook-form';
 
 function App(props) {
 
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [shortMovie, setShortMovie] = useState(false);
+  const [shortSaveMovie, setShortSaveMovie] = useState(false);
+  const [searchedSaveWord, setSearchedSaveWord] = useState('');
   const [searchMovies, setSearchMovies] = useState([]);
   const [countCards, setCountCards] = useState(0);
   const [buttonElse, setButtonElse] = useState(false);
@@ -27,7 +30,14 @@ function App(props) {
   const [countAdd, setCountAdd] = useState(0);
   const [navVisible, setNavVisible] = useState(false);
   const [savedMovie, setSavedMovie] = useState([]);
+  const [searchedSaveMovies, setSearchedSaveMovies] = useState([]);
+  const [searchWord, setSearchWord] = useState(false);
+  const [searchedMoviesList, setSearchedMoviesList] = useState([]);
+  const [searchedShortMoviesList, setSearchedShortMoviesList] = useState([]);
+  const [message, setMessage] = useState(false);
+  const [textMessage, setTextMessage] = useState('');
 
+  
   function loadMovieCards() {
     if (width > 1280) {
       setCountOnPage(12);
@@ -48,105 +58,18 @@ function App(props) {
   window.onresize = (() => {
     setTimeout(() => {
       setWidth(window.innerWidth);
-      console.log(width);
       loadMovieCards();
     }, 500)
   })
 
-  useEffect(() => {
-    if (loggedIn) {
-      const searched = JSON.parse(localStorage.getItem('searchedMoviesList'));
-      //const shortMov = localStorage.getItem('shortMovie');
-      if (searched && searched !== []) {
-        //setShortMovie(false);
-        checkedButtonElse();
-      } else {
-        moviesApi.getMovies()
-        .then(res => {
-          localStorage.setItem('moviesList', JSON.stringify(res));
-        })
-        .catch((err) => {
-          console.log(err)
-        });
-      }
+  function checkedButtonElse() {
+    if (countCards > 3 && countOnPage < countCards) {
+      setButtonElse(true);
+    } else {
+      setButtonElse(false);
     }
-  }, [loggedIn, searchMovies, savedMovie])
-
-  useEffect(() => {
-    if (loggedIn) {
-      api.getMovies()
-      .then((data) => {
-        let userSavedMovies = data.filter(i => i.owner === currentUser._id);
-        setSavedMovie(userSavedMovies);
-      })
-      .catch((err) => {
-        console.log(err)
-      });
-    }
-  }, [loggedIn])
-
-  function handleLoginUser(data) {
-    api.authorize(data)
-    .then((res) => {
-      setLoggedIn(true);
-      props.history.push('/movies');
-    })
-    .catch((err) => {
-      console.log(err);
-    })
   }
   
-  function handleRegisterUser(data) {
-    api.register(data)
-    .then((res) => {
-      handleLoginUser({email: data.email, password: data.password});
-      return res;
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-
-  function handleChangeUser(data) {
-    api.editProfile(data)
-    .then((res) => {
-      setCurrentUser(res);
-    })
-    .catch((err) => {
-      console.log(err.name)
-    })
-  }
-
-  function activatePreloader() {
-    setPreloader(true);
-  }
-
-  function handleSearchMovies(movieName) {
-    setTimeout(() => {
-      const allMovies = JSON.parse(localStorage.getItem('moviesList'));
-      const searchedMovies = [];
-      allMovies.map(function (movie) {
-        if (movie.nameRU.indexOf(movieName) !== -1 && shortMovie && movie.duration < 40) {
-          searchedMovies.push(movie)
-        } else if (movie.nameRU.indexOf(movieName) !== -1 && !shortMovie) {
-          searchedMovies.push(movie)
-        }
-        return searchedMovies;
-      });
-      setSearchMovies(searchedMovies);
-      setCountCards(searchedMovies.length);
-      localStorage.setItem('shortMovie', shortMovie);
-      localStorage.setItem('searchedMoviesList', JSON.stringify(searchedMovies));
-      setPreloader(false);
-    }, 3000)
-    
-  }
-
-
-  function toggleShortMovie() {
-    setShortMovie(!shortMovie);
-  }
-
   useEffect(() => {
     if (loggedIn) {
       api.getUser()
@@ -176,17 +99,152 @@ function App(props) {
     })
   }
 
-  function checkedButtonElse() {
-    if (countCards > 3 && countOnPage < countCards) {
-      setButtonElse(true);
-    } else {
-      setButtonElse(false);
-    }
-  }
-
+  
   useEffect(() => {
     checkToken();
   }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      if (localStorage.getItem('shortMovies')) {
+        setShortMovie(JSON.parse(localStorage.getItem('shortMovies')));
+      }
+    }
+  }, [loggedIn])
+  
+  
+
+  useEffect(() => {
+    if (localStorage.getItem('searchWord')) {
+      handleSearchMovies(localStorage.getItem('searchWord'));
+    }
+  }, [shortMovie])
+
+  function toggleShortMovie() {
+    setShortMovie(!shortMovie);
+  }
+
+  function handleSearchMovies(movieName) {
+    setSearchedMoviesList([]);
+    setSearchedShortMoviesList([]);
+    setPreloader(true);
+    moviesApi.getMovies()
+    .then(allMovies => {
+      if (allMovies) {
+        if (shortMovie === true) {
+          const res = allMovies.filter((movie) => {
+            return movie.nameRU.toLowerCase().indexOf(movieName.toLowerCase()) !== -1 && movie.duration < 40;
+          });
+          setSearchedShortMoviesList(res);
+          localStorage.setItem('searchedMoviesList', JSON.stringify(res));
+          localStorage.setItem('searchWord', movieName);
+          localStorage.setItem('shortMovies', shortMovie)
+        } else {
+          const res = allMovies.filter((movie) => {
+            return movie.nameRU.toLowerCase().indexOf(movieName.toLowerCase()) !== -1;
+          });
+          setSearchedMoviesList(res);
+          localStorage.setItem('searchedMoviesList', JSON.stringify(res));
+          localStorage.setItem('searchWord', movieName);
+          localStorage.setItem('shortMovies', shortMovie)
+        }
+      } else {
+        setSearchMovies([]);
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    .finally(() => {
+      setPreloader(false);
+    })
+  }
+
+  useEffect(() => {
+    if (loggedIn) {
+      getSavedMovie();
+    }
+  }, [loggedIn])
+
+  function getSavedMovie() {
+    api.getMovies()
+    .then((data) => {
+      setSavedMovie(data);
+    })
+    .catch((err) => {
+      console.log(err)
+    });
+  }
+
+  useEffect(() => {
+    if (loggedIn) {
+      loadMovies();
+    }    
+  }, [loggedIn, searchedMoviesList, searchedShortMoviesList])
+
+  useEffect(() => {
+    if (loggedIn) {
+      setCountCards(searchMovies.length);
+    }
+  }, [searchMovies])
+
+  useEffect(() => {
+    if (loggedIn) {
+      checkedButtonElse();
+    }
+  }, [countCards])
+  
+  function loadMovies() {
+    const searched = JSON.parse(localStorage.getItem('searchedMoviesList'));
+    const searchWord = localStorage.getItem('searchWord');
+    setSearchWord(searchWord);
+    if (searched && searched !== []) {
+      setSearchMovies(searched);
+      
+    }
+  }
+
+  function handleLoginUser(data) {
+    api.authorize(data)
+    .then((res) => {
+      setLoggedIn(true);
+      props.history.push('/movies');
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+  
+  function handleRegisterUser(data) {
+    api.register(data)
+    .then((res) => {
+      handleLoginUser({email: data.email, password: data.password});
+      return res;
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  function handleChangeUser(data) {
+    api.editProfile(data)
+    .then((res) => {
+      setCurrentUser(res);
+      setMessage(true);
+      setTextMessage('Данные успешно обновлены!');
+    })
+    .catch((err) => {
+      console.log(err.name)
+      setMessage(true);
+      setTextMessage('Данные не обновлены! Попробуйте еще раз.')
+    })
+    .finally(() => {
+      setTimeout(() => {
+        setMessage(false);
+        setTextMessage('')
+      }, 3000)
+    })
+  }
 
   function addCard() {
     if (searchMovies.length - countOnPage > countAdd) {
@@ -209,13 +267,11 @@ function App(props) {
   function handleMovieSave(movie) {
     const isSaved = savedMovie.some(i => (i.movieId === movie.movieId)) || movie.owner ;
     const mov = savedMovie.find((i) => i.movieId === movie.movieId) || movie;
-    console.log(mov);
     api.toggleSave(movie, isSaved, mov)
     .then(() => {
       api.getMovies()
       .then((data) => {
-        let userSavedMovies = data.filter(i => i.owner === currentUser._id);
-        setSavedMovie(userSavedMovies);
+        setSavedMovie(data);
       })
       .catch((err) => {
         console.log(err);
@@ -226,12 +282,61 @@ function App(props) {
     });
   }
 
+  function toggleSaveShortMovie() {
+    setShortSaveMovie(!shortSaveMovie);
+  }
+
+  useEffect(() => {
+    handleSearchSavedMovies(searchedSaveWord);
+  }, [shortSaveMovie])
+
+  useEffect(() => {
+    setSavedMovie(searchedSaveMovies);
+  }, [searchedSaveMovies, shortSaveMovie])
+
+  function handleSearchSavedMovies(movieName) {
+    setSearchedSaveWord(movieName);
+    setSearchedSaveMovies([]);
+    setPreloader(true);
+    api.getMovies()
+    .then((data) => {
+      if (shortSaveMovie) {
+        const res = data.filter((movie) => {
+          return movie.nameRU.toLowerCase().indexOf(movieName.toLowerCase()) !== -1 && movie.duration < 40;
+        });
+        setSearchedSaveMovies(res);
+      } else {
+        const res = data.filter((movie) => {
+          return movie.nameRU.toLowerCase().indexOf(movieName.toLowerCase()) !== -1;
+        });
+        setSearchedSaveMovies(res);
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    .finally(() => {
+      setPreloader(false);
+    })
+  }
+
   function logout() {
-    setLoggedIn(false);
-    setShortMovie(false);
-    localStorage.removeItem('shortMovie');
-    localStorage.removeItem('moviesList');
-    localStorage.removeItem('searchedMoviesList');
+    api.logout()
+    .then(() => {
+      localStorage.removeItem('shortMovies');
+      localStorage.removeItem('searchedMoviesList');
+      localStorage.removeItem('searchWord');
+      setSearchMovies([]);
+      setCountCards(0);
+      setShortMovie(false);
+      setSavedMovie([]);
+      setSearchedShortMoviesList([]);
+      setSearchedMoviesList([]);
+      setLoggedIn(false);
+    })
+    .catch((err) => {
+      console.log(err.name);
+    });
   }
 
   return (
@@ -241,6 +346,10 @@ function App(props) {
           <Main
             exact
             path="/"
+            loggedIn={loggedIn}
+            handleNavbar={handleNavbar}
+            closeNavbar={closeNavbar}
+            navVisible={navVisible}
           />
           <ProtectedRoute 
             loggedIn={loggedIn}
@@ -256,26 +365,24 @@ function App(props) {
             handleNavbar={handleNavbar}
             closeNavbar={closeNavbar}
             navVisible={navVisible}
-            movies={searchMovies}
             onSaveMovie={handleMovieSave}
             savedMovie={savedMovie}
-            activatePreloader={activatePreloader}
           />
           <ProtectedRoute 
             loggedIn={loggedIn}
             component={SavedMovies}
             path="/saved-movies"
-            toggleShortMovie={toggleShortMovie}
+            toggleShortMovie={toggleSaveShortMovie}
             savedMovie={savedMovie}
+            cards={ savedMovie || [] }
             navVisible={navVisible}
             buttonElse={buttonElse}
             preloader={preloader}
             addCard={addCard}
-            shortMovie={shortMovie}
+            shortMovie={shortSaveMovie}
             handleNavbar={handleNavbar}
             onSaveMovie={handleMovieSave}
-            activatePreloader={activatePreloader}
-            searchMovies={handleSearchMovies}
+            searchMovies={handleSearchSavedMovies}
           />
           <ProtectedRoute
             loggedIn={loggedIn} 
@@ -286,6 +393,8 @@ function App(props) {
             handleNavbar={handleNavbar}
             closeNavbar={closeNavbar}
             navVisible={navVisible}
+            textMessage={textMessage}
+            message={message}
           />
           <Route path="/signin">
             <Login 

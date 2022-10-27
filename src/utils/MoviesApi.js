@@ -23,7 +23,7 @@ const moviesApi = new MoviesApi({
   headers: {
     'Content-Type': 'application/json',
   },
-  credentials: 'include',
+  //credentials: 'include',
 });
 
 export default moviesApi;

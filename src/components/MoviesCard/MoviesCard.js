@@ -6,7 +6,7 @@ function MoviesCard(props) {
   const currentUser = useContext(CurrentUserContext);
   const isOwn = (props.path === '/movies') ? props.savedMovie.some(i => (i.owner === currentUser._id && i.movieId === props.elem.id)) : props.elem.owner === currentUser._id;
   const cardSaveButton = (
-    `card__button ${(isOwn) && 'card__button_theme card__button_type_close'}`
+    `card__button ${(isOwn) && `${props.path === '/movies' ? 'card__button_theme' : 'card__button_type_close'}`}`
   );
 
   
@@ -51,7 +51,7 @@ function MoviesCard(props) {
       <div className="card__info">
         <div className="card__info-container">
           <h2 className="card__title">{props.elem.nameRU}</h2>
-          <p className="card__duration">{props.elem.duration}</p>
+          <p className="card__duration">{`${Math.floor(props.elem.duration / 60)} ч ${props.elem.duration % 60} м`}</p>
         </div>
         <button onClick={handleSaveMovie} className={cardSaveButton} aria-label=""></button>
       </div>

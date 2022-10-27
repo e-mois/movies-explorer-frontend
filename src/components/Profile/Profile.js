@@ -2,7 +2,7 @@ import Header from "../Header/Header";
 import Navigation from "../Navigation/Navigation";
 import avatar from "../../images/avatar.png"
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import isEmail from "validator/lib/isEmail";
@@ -10,13 +10,28 @@ import isEmail from "validator/lib/isEmail";
 function Profile(props) {
 
   const currentUser = useContext(CurrentUserContext);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    setName(currentUser.name);
+    setEmail(currentUser.email);
+  }, [currentUser]);
+
+  function handleChangeName(event) {
+    setName(event.target.value);
+  }
+
+  function handleChangeEmail(event) {
+    setEmail(event.target.value);
+  }
 
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   function onSubmit(data) {
     props.onChangeUser({
-      name: data.name,
-      email: data.email
+      name: data.name || name,
+      email: data.email || email,
     })
   }
 
@@ -46,6 +61,7 @@ function Profile(props) {
       <main className="main">
         <form className="profile__content" onSubmit={handleSubmit(onSubmit)}>
           <div className="profile__main">
+            <p className={`profile__message ${props.message && 'profile__message_active'}`}>{props.textMessage}</p>
             <h2 className="profile__title">Привет, {currentUser.name}</h2>
             <div className="profile__info">
               <div className="profile__row">
@@ -53,17 +69,16 @@ function Profile(props) {
                 <input 
                   name='name'
                   className="profile__value" 
-                  placeholder={currentUser.name}
+                  value={name}
                   {...register('name', {
-                    required: true,
                     minLength: 2,
                     maxLength: 30,
                     pattern: /[а-яa-z]/i,
                   })} 
                   aria-invalid={errors.name ? "true" : "false"}
+                  onChange= {handleChangeName}
                 />
                 <span className={`auth__input-error auth__input-error_visible`}>
-                  {errors.name?.type === 'required' && 'Пожалуйста, заполните поле'}
                   {errors.name?.type === 'minLength' && 'Имя должно быть не менее 2-х символов'}
                   {errors.name?.type === 'maxLength' && 'Имя должно быть не более 30 символов'}
                   {errors.name?.type === 'pattern' && 'Поле содержит недопустимые символы'}
@@ -74,15 +89,14 @@ function Profile(props) {
                 <input 
                   name='email' 
                   {...register('email', {
-                    required: true,
                     validate: (input) => isEmail(input),
                   })} 
                   className="profile__value" 
-                  placeholder={currentUser.email} 
-                  aria-invalid={errors.email ? "true" : "false"} 
+                  value={email} 
+                  aria-invalid={errors.email ? "true" : "false"}
+                  onChange= {handleChangeEmail}
                 />
                 <span className={`auth__input-error auth__input-error_visible`}>
-                  {errors.email?.type === 'required' && 'Пожалуйста, заполните поле'}
                   {errors.email?.type === 'validate' && 'Введите Email'}
                 </span>
               </div>

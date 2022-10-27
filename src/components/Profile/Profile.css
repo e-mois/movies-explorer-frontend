@@ -8,3 +8,5 @@
 @import url(../../blocks/profile/__buttons/profile__buttons.css);
 @import url(../../blocks/profile/__button/profile__button.css);
 @import url(../../blocks/profile/__button/_type/profile__button_type_red.css);
+@import url(../../blocks/profile/__message/profile__message.css);
+@import url(../../blocks/profile/__message/_active/profile__message_active.css)

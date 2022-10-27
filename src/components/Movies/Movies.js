@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 
 
 function Movies(props) {
-
   return (
     <div className="content">
       <Header
@@ -37,11 +36,11 @@ function Movies(props) {
       <main className="main">
         <SearchForm onSearchMovies={props.searchMovies} activatePreloader={props.activatePreloader} toggleShortMovie={props.toggleShortMovie} shortMovie={props.shortMovie} />
         <Preloader preloader={props.preloader}/>
-        {(props.movies.length === 0 && !props.preloader) ? <p className="movies__nothing">Ничего не найдено</p> : <MoviesCardList path={props.path} savedMovie={props.savedMovie} onSave={props.onSaveMovie} moviesList={props.cards} buttonElse={props.buttonElse} addCard={props.addCard} />}
+        <MoviesCardList path={props.path} savedMovie={props.savedMovie} onSave={props.onSaveMovie} moviesList={props.cards} buttonElse={props.buttonElse} addCard={props.addCard} />
       </main>
       <Footer />
     </div>
   )
 }
-
+//
 export default Movies;

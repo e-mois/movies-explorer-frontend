@@ -8,6 +8,7 @@ import Preloader from "../Preloader/Preloader";
 import { Link } from "react-router-dom";
 
 function SavedMovies(props) {
+  
   return (
     <div className="content">
       <Header
@@ -34,7 +35,7 @@ function SavedMovies(props) {
       <main className="main">
         <SearchForm onSearchMovies={props.searchMovies} toggleShortMovie={props.toggleShortMovie} shortMovie={props.shortMovie} />
         <Preloader preloader={props.preloader}/>
-        {(props.movies === []) ? <p>Ничего не найдено</p> : <MoviesCardList activatePreloader={props.activatePreloader} savedMovie={props.savedMovie} onSave={props.onSaveMovie} moviesList={props.savedMovie} buttonElse={props.buttonElse} addCard={props.addCard} />}
+        <MoviesCardList activatePreloader={props.activatePreloader} savedMovie={props.savedMovie} onSave={props.onSaveMovie} moviesList={props.cards} buttonElse={props.buttonElse} addCard={props.addCard} />
       </main>
       <Footer />
     </div>    

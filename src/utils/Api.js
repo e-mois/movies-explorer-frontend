@@ -75,11 +75,19 @@ class Api {
     .then(this._checkResponseStatus)
   }
 
+  logout() {
+    return fetch(`${this._options.baseUrl}/signout`, {
+      headers: this._options.headers,
+      credentials: this._options.credentials,
+    })
+    .then(this._checkResponseStatus)
+  }
+
 }
 
 const api = new Api({
-  //baseUrl: 'https://api.emoiseev.diploma.nomorepartiesxyz.ru',
-  baseUrl: 'http://localhost:3001',
+  baseUrl: 'https://api.emoiseev.diploma.nomorepartiesxyz.ru',
+  //baseUrl: 'http://localhost:3001',
   headers: {
     'Content-Type': 'application/json',
   },
