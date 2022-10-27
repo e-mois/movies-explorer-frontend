@@ -91,7 +91,6 @@ function App(props) {
       if (data) {
         setLoggedIn(true);
         setCurrentUser(data);
-        props.history.push('/movies')
       }
     })
     .catch((err) => {
@@ -212,6 +211,14 @@ function App(props) {
     })
     .catch((err) => {
       console.log(err);
+      setMessage(true);
+      setTextMessage("Неправильный логин или пароль");
+    })
+    .finally(() => {
+      setTimeout(() => {
+        setMessage(false);
+        setTextMessage('')
+      }, 3000)
     })
   }
   
@@ -223,6 +230,14 @@ function App(props) {
     })
     .catch((err) => {
       console.log(err);
+      setMessage(true);
+      setTextMessage((err === 409) ? "Пользователь с таким email уже существует" : "Попробуйте еще раз");
+    })
+    .finally(() => {
+      setTimeout(() => {
+        setMessage(false);
+        setTextMessage('')
+      }, 3000)
     })
   }
 
@@ -234,7 +249,7 @@ function App(props) {
       setTextMessage('Данные успешно обновлены!');
     })
     .catch((err) => {
-      console.log(err.name)
+      console.log(err)
       setMessage(true);
       setTextMessage('Данные не обновлены! Попробуйте еще раз.')
     })
@@ -399,11 +414,15 @@ function App(props) {
           <Route path="/signin">
             <Login 
               onLoginUser={handleLoginUser} 
+              textMessage={textMessage}
+              message={message}
             />
           </Route>
           <Route path="/signup">
             <Register 
               onRegisterUser={handleRegisterUser}
+              textMessage={textMessage}
+              message={message}
             />
           </Route>
           <Route path="*">

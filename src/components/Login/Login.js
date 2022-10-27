@@ -6,7 +6,7 @@ import isEmail from "validator/lib/isEmail";
 function Login(props) {
 
   const { register, handleSubmit, formState: { errors } } = useForm();
-
+  
   function onSubmit(data) {
     props.onLoginUser({
       email: data.email,
@@ -16,6 +16,7 @@ function Login(props) {
 
   return (
     <main className='main'>
+      <p className={`profile__message ${props.message && 'profile__message_active'}`}>{props.textMessage}</p>
       <section className="auth">
         <Link to="/"><img className="auth__logo" src={logo} alt="Лого"/></Link>
         <h2 className="auth__title">Рады видеть!</h2>

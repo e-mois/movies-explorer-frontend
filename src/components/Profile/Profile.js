@@ -59,9 +59,9 @@ function Profile(props) {
         </a>
       </Header>
       <main className="main">
+        <p className={`profile__message ${props.message && 'profile__message_active'}`}>{props.textMessage}</p>
         <form className="profile__content" onSubmit={handleSubmit(onSubmit)}>
           <div className="profile__main">
-            <p className={`profile__message ${props.message && 'profile__message_active'}`}>{props.textMessage}</p>
             <h2 className="profile__title">Привет, {currentUser.name}</h2>
             <div className="profile__info">
               <div className="profile__row">
