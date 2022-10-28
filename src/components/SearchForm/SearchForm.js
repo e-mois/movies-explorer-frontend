@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Toggle from "../Toggle/Toggle";
 
 function SearchForm(props) {
+
+  useEffect(() => {
+    setSearchWords(props.searchWord);
+  }, [])
 
   const [searchWords, setSearchWords] = useState('');
 
@@ -19,7 +23,7 @@ function SearchForm(props) {
       <form className='search-form__content' name="search" onSubmit={handleSubmit} >
         <div className="search-form__block">
           <div className="search-form__logo"></div>
-          <input className="search-form__input" placeholder="Фильм" name="search" type="text" required onChange={handleChangeSearch}/>
+          <input className="search-form__input" placeholder="Фильм" name="search" type="text" required onChange={handleChangeSearch} value={searchWords}/>
           <button className="search-form__button" type="submit" onClick={props.activatePreloader}></button>
         </div>
         <div className="search-form__toggle">

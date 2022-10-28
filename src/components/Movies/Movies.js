@@ -34,9 +34,9 @@ function Movies(props) {
         </a>
       </Header>
       <main className="main">
-        <SearchForm onSearchMovies={props.searchMovies} activatePreloader={props.activatePreloader} toggleShortMovie={props.toggleShortMovie} shortMovie={props.shortMovie} />
+        <SearchForm searchWord={props.searchWord} onSearchMovies={props.searchMovies} activatePreloader={props.activatePreloader} toggleShortMovie={props.toggleShortMovie} shortMovie={props.shortMovie} />
         <Preloader preloader={props.preloader}/>
-        <MoviesCardList path={props.path} savedMovie={props.savedMovie} onSave={props.onSaveMovie} moviesList={props.cards} buttonElse={props.buttonElse} addCard={props.addCard} />
+        <MoviesCardList emptySearch={props.emptySearch} path={props.path} savedMovie={props.savedMovie} onSave={props.onSaveMovie} moviesList={props.cards} buttonElse={props.buttonElse} addCard={props.addCard} />
       </main>
       <Footer />
     </div>

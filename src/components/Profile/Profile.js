@@ -2,37 +2,25 @@ import Header from "../Header/Header";
 import Navigation from "../Navigation/Navigation";
 import avatar from "../../images/avatar.png"
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import isEmail from "validator/lib/isEmail";
 
 function Profile(props) {
 
+  const { register, formState: { errors, isValid }, handleSubmit } = useForm({mode: 'onChange'});
   const currentUser = useContext(CurrentUserContext);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-
-  useEffect(() => {
-    setName(currentUser.name);
-    setEmail(currentUser.email);
-  }, [currentUser]);
-
-  function handleChangeName(event) {
-    setName(event.target.value);
-  }
-
-  function handleChangeEmail(event) {
-    setEmail(event.target.value);
-  }
-
-  const { register, handleSubmit, formState: { errors } } = useForm();
-
+ 
   function onSubmit(data) {
-    props.onChangeUser({
-      name: data.name || name,
-      email: data.email || email,
-    })
+    if (data.name !== currentUser.name || data.email !== currentUser.email) {
+      props.onChangeUser({
+        name: data.name,
+        email: data.email,
+      })
+    } else {
+      return !isValid;
+    }
   }
 
   return (
@@ -69,14 +57,12 @@ function Profile(props) {
                 <input 
                   name='name'
                   className="profile__value" 
-                  value={name}
                   {...register('name', {
+                    value: currentUser.name,
                     minLength: 2,
                     maxLength: 30,
                     pattern: /[а-яa-z]/i,
-                  })} 
-                  aria-invalid={errors.name ? "true" : "false"}
-                  onChange= {handleChangeName}
+                  })}
                 />
                 <span className={`auth__input-error auth__input-error_visible`}>
                   {errors.name?.type === 'minLength' && 'Имя должно быть не менее 2-х символов'}
@@ -87,14 +73,12 @@ function Profile(props) {
               <div className="profile__row">
                 <label className="profile__key">E-Mail</label>
                 <input 
-                  name='email' 
-                  {...register('email', {
-                    validate: (input) => isEmail(input),
-                  })} 
+                  name='email'  
                   className="profile__value" 
-                  value={email} 
-                  aria-invalid={errors.email ? "true" : "false"}
-                  onChange= {handleChangeEmail}
+                  {...register('email', {
+                    value: currentUser.email,
+                    validate: (input) => isEmail(input),
+                  })}
                 />
                 <span className={`auth__input-error auth__input-error_visible`}>
                   {errors.email?.type === 'validate' && 'Введите Email'}
@@ -103,7 +87,7 @@ function Profile(props) {
             </div>
           </div>
           <div className="profile__buttons">
-            <button className="profile__button" type="submit">Редактировать</button>
+            <button className={`profile__button ${!isValid ? 'profile__button_disabled' : ''}`} type="submit" disabled={!isValid}>Редактировать</button>
             <button className="profile__button profile__button_type_red" type="button" onClick={props.logout}>Выйти из аккаунта</button>
           </div>
         </form>

@@ -30,12 +30,16 @@ function App(props) {
   const [countAdd, setCountAdd] = useState(0);
   const [navVisible, setNavVisible] = useState(false);
   const [savedMovie, setSavedMovie] = useState([]);
+  const [savedMovieAll, setSavedMovieAll] = useState([]);
   const [searchedSaveMovies, setSearchedSaveMovies] = useState([]);
   const [searchWord, setSearchWord] = useState(false);
   const [searchedMoviesList, setSearchedMoviesList] = useState([]);
   const [searchedShortMoviesList, setSearchedShortMoviesList] = useState([]);
   const [message, setMessage] = useState(false);
   const [textMessage, setTextMessage] = useState('');
+  const [emptySearch, setEmptySearch] = useState(false);
+  const [emptySaveSearch, setEmptySaveSearch] = useState(false);
+  const [isSearched, setIsSearched] = useState(false);
 
   
   function loadMovieCards() {
@@ -126,6 +130,7 @@ function App(props) {
   function handleSearchMovies(movieName) {
     setSearchedMoviesList([]);
     setSearchedShortMoviesList([]);
+    setEmptySearch(false);
     setPreloader(true);
     moviesApi.getMovies()
     .then(allMovies => {
@@ -134,6 +139,9 @@ function App(props) {
           const res = allMovies.filter((movie) => {
             return movie.nameRU.toLowerCase().indexOf(movieName.toLowerCase()) !== -1 && movie.duration < 40;
           });
+          if (res.length === 0) {
+            setEmptySearch(true);
+          }
           setSearchedShortMoviesList(res);
           localStorage.setItem('searchedMoviesList', JSON.stringify(res));
           localStorage.setItem('searchWord', movieName);
@@ -142,6 +150,9 @@ function App(props) {
           const res = allMovies.filter((movie) => {
             return movie.nameRU.toLowerCase().indexOf(movieName.toLowerCase()) !== -1;
           });
+          if (res.length === 0) {
+            setEmptySearch(true);
+          }
           setSearchedMoviesList(res);
           localStorage.setItem('searchedMoviesList', JSON.stringify(res));
           localStorage.setItem('searchWord', movieName);
@@ -169,6 +180,7 @@ function App(props) {
     api.getMovies()
     .then((data) => {
       setSavedMovie(data);
+      setSavedMovieAll(data);
     })
     .catch((err) => {
       console.log(err)
@@ -178,7 +190,7 @@ function App(props) {
   useEffect(() => {
     if (loggedIn) {
       loadMovies();
-    }    
+    }
   }, [loggedIn, searchedMoviesList, searchedShortMoviesList])
 
   useEffect(() => {
@@ -199,7 +211,6 @@ function App(props) {
     setSearchWord(searchWord);
     if (searched && searched !== []) {
       setSearchMovies(searched);
-      
     }
   }
 
@@ -287,6 +298,7 @@ function App(props) {
       api.getMovies()
       .then((data) => {
         setSavedMovie(data);
+        setSavedMovieAll(data);
       })
       .catch((err) => {
         console.log(err);
@@ -304,13 +316,15 @@ function App(props) {
   useEffect(() => {
     handleSearchSavedMovies(searchedSaveWord);
   }, [shortSaveMovie])
-
+  
   useEffect(() => {
     setSavedMovie(searchedSaveMovies);
-  }, [searchedSaveMovies, shortSaveMovie])
+  }, [searchedSaveMovies, shortSaveMovie, savedMovie])
 
   function handleSearchSavedMovies(movieName) {
+    setIsSearched(true);
     setSearchedSaveWord(movieName);
+    setEmptySaveSearch(false);
     setSearchedSaveMovies([]);
     setPreloader(true);
     api.getMovies()
@@ -319,11 +333,17 @@ function App(props) {
         const res = data.filter((movie) => {
           return movie.nameRU.toLowerCase().indexOf(movieName.toLowerCase()) !== -1 && movie.duration < 40;
         });
+        if (res.length === 0) {
+          setEmptySaveSearch(true)
+        }
         setSearchedSaveMovies(res);
       } else {
         const res = data.filter((movie) => {
           return movie.nameRU.toLowerCase().indexOf(movieName.toLowerCase()) !== -1;
         });
+        if (res.length === 0) {
+          setEmptySaveSearch(true)
+        }
         setSearchedSaveMovies(res);
       }
     })
@@ -348,6 +368,9 @@ function App(props) {
       setSearchedShortMoviesList([]);
       setSearchedMoviesList([]);
       setLoggedIn(false);
+      setSearchWord('');
+      setEmptySearch(false);
+      setEmptySaveSearch(false);
     })
     .catch((err) => {
       console.log(err.name);
@@ -381,7 +404,9 @@ function App(props) {
             closeNavbar={closeNavbar}
             navVisible={navVisible}
             onSaveMovie={handleMovieSave}
-            savedMovie={savedMovie}
+            savedMovie={savedMovieAll}
+            searchWord={searchWord}
+            emptySearch={emptySearch}
           />
           <ProtectedRoute 
             loggedIn={loggedIn}
@@ -398,6 +423,10 @@ function App(props) {
             handleNavbar={handleNavbar}
             onSaveMovie={handleMovieSave}
             searchMovies={handleSearchSavedMovies}
+            emptySearch={emptySaveSearch}
+            setIsSearched={setIsSearched}
+            isSearched={isSearched}
+            allSaveMovie={savedMovieAll}
           />
           <ProtectedRoute
             loggedIn={loggedIn} 

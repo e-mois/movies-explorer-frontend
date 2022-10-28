@@ -6,9 +6,14 @@ import SearchForm from "../SearchForm/SearchForm";
 import avatar from "../../images/avatar.png"
 import Preloader from "../Preloader/Preloader";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 function SavedMovies(props) {
   
+  useEffect(() => {
+    props.setIsSearched(false)
+  }, [])
+
   return (
     <div className="content">
       <Header
@@ -35,7 +40,7 @@ function SavedMovies(props) {
       <main className="main">
         <SearchForm onSearchMovies={props.searchMovies} toggleShortMovie={props.toggleShortMovie} shortMovie={props.shortMovie} />
         <Preloader preloader={props.preloader}/>
-        <MoviesCardList activatePreloader={props.activatePreloader} savedMovie={props.savedMovie} onSave={props.onSaveMovie} moviesList={props.cards} buttonElse={props.buttonElse} addCard={props.addCard} />
+        <MoviesCardList emptySearch={props.emptySearch} activatePreloader={props.activatePreloader} savedMovie={props.savedMovie} onSave={props.onSaveMovie} moviesList={props.isSearched ? props.cards : props.allSaveMovie} buttonElse={props.buttonElse} addCard={props.addCard} />
       </main>
       <Footer />
     </div>    

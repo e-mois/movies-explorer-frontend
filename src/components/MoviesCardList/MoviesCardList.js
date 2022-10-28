@@ -4,7 +4,7 @@ function MoviesCardList(props) {
   return (
     <section className="movies" aria-label="Галерея">
       <div className="movies__content">
-        <p className={`movies__message ${props.moviesList.length === 0 && 'movies__message_active'}`}>Ничего не найдено</p>
+        <p className={`movies__message ${props.emptySearch && 'movies__message_active'}`}>Ничего не найдено</p>
         <ul className="movies__list">
           {props.moviesList.map((movie) => (
             <MoviesCard 
